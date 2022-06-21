@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    ports:
+      - 81:80
+    volumes:
+      - ./wordpress:/var/www/html
+
+    depends_on:
+      - php
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      - mysql
+# docker-compose up -d --build
+# mysql  -u root -ppassword
+# presting database -
+# 1) add mysql directoory to the root
+#  2) add volume in mysql service ./mysql:/var/lib/mysql
